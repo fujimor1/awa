@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- FONDO NOCTURNO Y ESTRELLAS --- */
+        body {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; margin: 0; overflow: hidden; position: relative;
+            background: linear-gradient(to bottom, #020111, #191621);
+            font-family: 'Poppins', sans-serif;
+        }
+        .stars-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .star { position: absolute; background-color: white; border-radius: 50%; opacity: 0; animation: twinkle infinite ease-in-out; }
+        @keyframes twinkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: 1; transform: scale(1.2); } }
+        .s1 { width: 2px; height: 2px; top: 10%; left: 20%; animation-duration: 4s; animation-delay: 0s; }
+        .s2 { width: 3px; height: 3px; top: 30%; left: 80%; animation-duration: 5s; animation-delay: 1s; } 
+        .s3 { width: 2px; height: 2px; top: 70%; left: 10%; animation-duration: 3s; animation-delay: 2s; } 
+        .s4 { width: 3px; height: 3px; top: 50%; left: 50%; animation-duration: 6s; animation-delay: 0.5s; } 
+        .s5 { width: 2px; height: 2px; top: 80%; left: 70%; animation-duration: 4s; animation-delay: 3s; } 
+        .s6 { width: 4px; height: 4px; top: 20%; left: 40%; animation-duration: 7s; animation-delay: 1.5s; } 
+        .s7 { width: 2px; height: 2px; top: 60%; left: 90%; animation-duration: 5s; animation-delay: 2.5s; } 
+        .s8 { width: 3px; height: 3px; top: 15%; left: 65%; animation-duration: 4s; animation-delay: 0.2s; } 
+        .s9 { width: 2px; height: 2px; top: 45%; left: 25%; animation-duration: 6s; animation-delay: 3.5s; } 
+        .s10 { width: 3px; height: 3px; top: 85%; left: 35%; animation-duration: 5s; animation-delay: 1.2s; }
+
+        /* --- TARJETA Y GIRO --- */
+        .card-wrapper {
+            position: relative; width: 340px;
+            height: 640px; /* Se mantiene en 640px */
+            z-index: 10; cursor: pointer; animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-12px); } 100% { transform: translateY(0px); } }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); transform-style: preserve-3d; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); }
+        .card-wrapper.is-flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 20px; background-color: #FAF0E6; overflow: hidden; }
+
+        /* --- DISEÑO FRONTAL (REPRODUCTOR) --- */
+        .flip-card-front { padding: 30px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; color: #000; }
+        .player-cover { width: 100%; aspect-ratio: 1 / 1; background-color: #f0f0f0; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); background-size: cover; background-position: center; background-image: url('https://i.pinimg.com/736x/fd/ff/45/fdff45c6026b1aad9bd1f9902bf42361.jpg'); margin-bottom: 20px; }
+        .song-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .song-title { font-size: 24px; font-weight: 700; margin: 0; }
+        .like-icon { font-size: 24px; color: #000; cursor: pointer; }
+        .song-artist { font-size: 14px; color: #666; margin: 0 0 20px 0; font-weight: 400; }
+        .progress-wrapper { width: 100%; margin-bottom: 20px; display: flex; align-items: center; }
+        .player-progress-bar { height: 4px; background-color: #e0e0e0; border-radius: 2px; position: relative; flex-grow: 1; }
+        .player-progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 35%; background-color: #000; border-radius: 2px; }
+        .player-progress-knob { position: absolute; left: 35%; top: 50%; width: 14px; height: 14px; background-color: #000; border-radius: 50%; transform: translate(-50%, -50%); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .player-controls { display: flex; justify-content: space-between; align-items: center; color: #000; margin-bottom: 20px; padding: 0 10px; }
+        .ctrl-icon { font-family: 'Material Icons Round'; font-size: 28px; color: #000; cursor: pointer; transition: transform 0.2s; user-select: none; }
+        .ctrl-icon:hover { transform: scale(1.1); }
+        .play-btn-container { width: 65px; height: 65px; background-color: #000; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: transform 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+        .play-btn-container:hover { transform: scale(1.05); }
+        .play-icon { font-family: 'Material Icons Round'; font-size: 36px; color: #fff; }
+        .waveform-container { display: flex; justify-content: center; align-items: center; height: 30px; background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="30" viewBox="0 0 40 30"><path d="M2,15 L2,25 M6,10 L6,30 M10,5 L10,35 M14,12 L14,28 M18,2 L18,38 M22,15 L22,25 M26,8 L26,32 M30,18 L30,22 M34,5 L34,35 M38,12 L38,28" stroke="black" stroke-width="2" stroke-linecap="round"/></svg>'); background-repeat: repeat-x; background-position: left center; width: 100%; opacity: 0.8; }
+
+        /* --- DISEÑO TRASERO (FOTOS Y TEXTO) --- */
+        .flip-card-back {
+            transform: rotateY(180deg);
+            padding: 15px 20px 20px 20px;
+            box-sizing: border-box; background-color: #ffffff; text-align: center; position: relative; display: block; color: #000;
+        }
+        .collage-title {
+            font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 32px; color: #000;
+            margin: 5px 0 15px 0;
+        }
+        .collage-text { font-family: 'Poppins', sans-serif; font-weight: 400; font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 30px; padding: 0 10px; }
+        .polaroid { background: white; padding: 8px; padding-bottom: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: absolute; width: 110px; height: 110px; border: 1px solid #e0e0e0; transition: transform 0.3s ease, z-index 0s; }
+        .polaroid:hover { z-index: 50 !important; transform: scale(1.15) rotate(0deg) !important; }
+        .polaroid-img { width: 100%; height: 100%; background-size: cover; background-position: center; background-color: #f0f0f0; }
+        
+        /* --- CAMBIO AQUÍ: FOTOS MÁS ABAJO --- */
+        /* Se sumaron 50px a cada propiedad "top" para alejarlas del texto */
+        .p1 { top: 290px; left: 25px; transform: rotate(-8deg); z-index: 1; } 
+        .p1 .polaroid-img { background-image: url('https://i.pinimg.com/1200x/4d/ea/b0/4deab0f23961ab56bf67e14741d8d742.jpg'); } 
+        
+        .p2 { top: 320px; left: 175px; transform: rotate(12deg); z-index: 2; } 
+        .p2 .polaroid-img { background-image: url('https://i.pinimg.com/736x/ff/d9/d2/ffd9d24166f2612650c5d9907dd0c5cc.jpg'); } 
+        
+        .p3 { top: 440px; left: 45px; transform: rotate(5deg); z-index: 3; } 
+        .p3 .polaroid-img { background-image: url('https://i.pinimg.com/1200x/ef/50/7d/ef507d96962f5851b6ad820810efe1b8.jpg'); } 
+        
+        .p4 { top: 470px; left: 165px; transform: rotate(-6deg); z-index: 4; } 
+        .p4 .polaroid-img { background-image: url('https://i.pinimg.com/736x/20/03/30/200330f11afa3005c286325a8828cc8e.jpg'); }
+
+        /* --- EXPLOSIÓN DE CORAZONES --- */
+        .explosion-container { position: absolute; top: 50%; left: 50%; width: 0; height: 0; z-index: 20; pointer-events: none; }
+        .heart-particle { position: absolute; font-size: 36px; color: #ff4081; opacity: 0; text-shadow: none; }
+        @keyframes explode { 0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; } 60% { opacity: 1; } 100% { transform: var(--translate-to) scale(2); opacity: 0; } }
+        .explosion-active .heart-particle { animation: explode 1.6s ease-out forwards; }
+        .h1 { --translate-to: translate(-220px, -280px); } .h2 { --translate-to: translate(-90px, -320px); } .h3 { --translate-to: translate(90px, -320px); } .h4 { --translate-to: translate(220px, -280px); } .h5 { --translate-to: translate(-280px, -120px); } .h6 { --translate-to: translate(-180px, -180px); } .h7 { --translate-to: translate(180px, -180px); } .h8 { --translate-to: translate(280px, -120px); } .h9 { --translate-to: translate(-250px, 60px); } .h10 { --translate-to: translate(-120px, 100px); } .h11 { --translate-to: translate(100px, 80px); } .h12 { --translate-to: translate(220px, 50px); } .h13 { --translate-to: translate(-200px, 220px); } .h14 { --translate-to: translate(0px, 250px); } .h15 { --translate-to: translate(200px, 220px); }
+    </style>
+</head>
+<body>
+    <div class="stars-container">
+        <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div><div class="star s4"></div><div class="star s5"></div>
+        <div class="star s6"></div><div class="star s7"></div><div class="star s8"></div><div class="star s9"></div><div class="star s10"></div>
+    </div>
+    <audio id="miCancion" src="musica.mp3"></audio>
+    <div class="explosion-container" id="explosion">
+        <div class="heart-particle h1">❤</div><div class="heart-particle h2">❤</div><div class="heart-particle h3">❤</div><div class="heart-particle h4">❤</div><div class="heart-particle h5">❤</div><div class="heart-particle h6">❤</div><div class="heart-particle h7">❤</div><div class="heart-particle h8">❤</div><div class="heart-particle h9">❤</div><div class="heart-particle h10">❤</div><div class="heart-particle h11">❤</div><div class="heart-particle h12">❤</div><div class="heart-particle h13">❤</div><div class="heart-particle h14">❤</div><div class="heart-particle h15">❤</div>
+    </div>
+    <div class="card-wrapper" id="mainCard">
+        <div class="flip-card-inner">
+            <div class="flip-card-front">
+                <div class="player-cover"></div>
+                <div class="song-header">
+                    <h2 class="song-title">Adore you</h2>
+                    <span class="like-icon material-icons-round">favorite</span>
+                </div>
+                <p class="song-artist">Harry Styles</p>
+                <div class="progress-wrapper">
+                    <div class="player-progress-bar">
+                        <div class="player-progress-fill"></div>
+                        <div class="player-progress-knob"></div>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <span class="ctrl-icon material-icons-round">shuffle</span>
+                    <span class="ctrl-icon material-icons-round">skip_previous</span>
+                    <div class="play-btn-container" id="playBtn">
+                        <span class="play-icon material-icons-round">play_arrow</span>
+                    </div>
+                    <span class="ctrl-icon material-icons-round">skip_next</span>
+                    <span class="ctrl-icon material-icons-round">repeat</span>
+                </div>
+                <div class="waveform-container"></div>
+            </div>
+            <div class="flip-card-back">
+                <h2 class="collage-title">Chiquistrikis</h2>
+                <div class="collage-text">
+                    <p>Si pudiera elegir de nuevo, volvería a coincidir contigo sin dudarlo, a ese preciso instante donde todo empezó, donde aún no sabía cuánto ibas a significar, pero ya intuía que eras algo distinto, algo que no se olvida.</p>
+                    <p>Teamoooooooooooo</p>
+                </div>
+                <div class="polaroid p1"><div class="polaroid-img"></div></div>
+                <div class="polaroid p2"><div class="polaroid-img"></div></div>
+                <div class="polaroid p3"><div class="polaroid-img"></div></div>
+                <div class="polaroid p4"><div class="polaroid-img"></div></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const card = document.getElementById('mainCard');
+        const explosion = document.getElementById('explosion');
+        const playBtnContainer = document.getElementById('playBtn');
+        const playIcon = playBtnContainer.querySelector('.play-icon');
+        const audio = document.getElementById('miCancion');
+        let isFlipped = false;
+
+        card.addEventListener('click', function(event) {
+            if (event.target.closest('.player-controls') || event.target.closest('.like-icon') || event.target.closest('.progress-wrapper')) {
+                return;
+            }
+            card.classList.toggle('is-flipped');
+            isFlipped = !isFlipped;
+            if (isFlipped) {
+                explosion.classList.remove('explosion-active');
+                void explosion.offsetWidth; 
+                explosion.classList.add('explosion-active');
+            }
+        });
+
+        playBtnContainer.addEventListener('click', function(event) {
+            event.stopPropagation(); 
+            if (audio.paused) { 
+                audio.play(); 
+                playIcon.textContent = 'pause'; 
+            } else { 
+                audio.pause(); 
+                playIcon.textContent = 'play_arrow'; 
+            }
+        });
+    </script>
+</body>
+</html>
